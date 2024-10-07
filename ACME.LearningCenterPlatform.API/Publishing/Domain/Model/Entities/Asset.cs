@@ -2,23 +2,16 @@ using ACME.LearningCenterPlatform.API.Publishing.Domain.Model.ValueObjects;
 
 namespace ACME.LearningCenterPlatform.API.Publishing.Domain.Model.Entities;
 
-public partial class Asset : IPublishable
+public partial class Asset(EAssetType type) : IPublishable
 {
     public int Id { get; }
     
-    public AcmeAssetIdentifier AssetIdentifier { get; private set; }
-    public EPublishingStatus Status { get; private set; }
-    public EAssetType Type { get; private set; }
+    public AcmeAssetIdentifier AssetIdentifier { get; private set; } = new();
+    public EPublishingStatus Status { get; private set; } = EPublishingStatus.Draft;
+    public EAssetType Type { get; private set; } = type;
     public virtual bool Readable => false;
     public virtual bool Viewable => false;
 
-    public Asset(EAssetType type)
-    {
-        Type = type;
-        Status = EPublishingStatus.Draft;
-        AssetIdentifier = new AcmeAssetIdentifier();
-    }
-    
     public void SendToEdit()
     {
         Status = EPublishingStatus.ReadyToEdit;
