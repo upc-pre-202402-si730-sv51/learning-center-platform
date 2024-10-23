@@ -2,6 +2,9 @@ using ACME.LearningCenterPlatform.API.Publishing.Domain.Model.ValueObjects;
 
 namespace ACME.LearningCenterPlatform.API.Publishing.Domain.Model.Entities;
 
+/// <summary>
+/// Represents an image asset in the ACME Learning Center Platform. 
+/// </summary>
 public class ImageAsset : Asset
 {
     public Uri? ImageUri { get; }

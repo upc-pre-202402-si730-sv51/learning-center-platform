@@ -3,6 +3,7 @@ using EntityFrameworkCore.CreatedUpdatedDate.Contracts;
 
 namespace ACME.LearningCenterPlatform.API.Publishing.Domain.Model.Entities;
 
+
 public partial class Asset: IEntityWithCreatedUpdatedDate
 {
     [Column("CreatedAt")] public DateTimeOffset? CreatedDate { get; set; }
