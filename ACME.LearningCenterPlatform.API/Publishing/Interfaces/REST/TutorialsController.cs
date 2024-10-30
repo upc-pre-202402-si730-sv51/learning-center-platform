@@ -114,7 +114,7 @@ public class TutorialsController(ITutorialQueryService tutorialQueryService, ITu
         var tutorial = await tutorialCommandService.Handle(addVideoAssetToTutorialCommand);
         if (tutorial is null) return BadRequest();
         var tutorialResource = TutorialResourceFromEntityAssembler.ToResourceFromEntity(tutorial);
-        return Ok(tutorialResource);
+        return CreatedAtAction(nameof(GetTutorialById), new { tutorialId = tutorial.Id }, tutorialResource);
     }
     
 }
