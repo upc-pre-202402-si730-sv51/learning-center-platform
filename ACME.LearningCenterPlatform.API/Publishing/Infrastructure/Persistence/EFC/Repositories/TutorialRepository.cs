@@ -38,4 +38,11 @@ public class TutorialRepository(AppDbContext context) : BaseRepository<Tutorial>
             .Include(tutorial => tutorial.Category)
             .ToListAsync();
     }
+    
+    // inheritedDoc
+    public async Task<bool> ExistsByTitleAsync(string title)
+    {
+        return await Context.Set<Tutorial>()
+            .AnyAsync(tutorial => tutorial.Title == title);
+    }
 }
