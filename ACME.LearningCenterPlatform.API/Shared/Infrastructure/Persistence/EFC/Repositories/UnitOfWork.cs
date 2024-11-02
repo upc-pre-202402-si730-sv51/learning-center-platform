@@ -13,7 +13,7 @@ namespace ACME.LearningCenterPlatform.API.Shared.Infrastructure.Persistence.EFC.
 /// <param name="context">
 /// The database context for the application
 /// </param>
-public class UnitOfWork(AppDbContext context) : IUnitOfWOrk
+public class UnitOfWork(AppDbContext context) : IUnitOfWork
 {
     // inheritedDoc
     public async Task CompleteAsync()

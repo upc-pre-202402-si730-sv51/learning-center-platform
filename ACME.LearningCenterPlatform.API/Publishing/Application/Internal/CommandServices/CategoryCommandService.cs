@@ -17,7 +17,7 @@ namespace ACME.LearningCenterPlatform.API.Publishing.Application.Internal.Comman
 /// </param>
 public class CategoryCommandService(
     ICategoryRepository categoryRepository, 
-    IUnitOfWOrk unitOfWork) : ICategoryCommandService
+    IUnitOfWork unitOfWork) : ICategoryCommandService
 {
     /// <inheritdoc />
     public async Task<Category?> Handle(CreateCategoryCommand command)

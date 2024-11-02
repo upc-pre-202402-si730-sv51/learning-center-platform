@@ -1,3 +1,8 @@
+using ACME.LearningCenterPlatform.API.Profiles.Application.Internal.CommandServices;
+using ACME.LearningCenterPlatform.API.Profiles.Application.Internal.QueryServices;
+using ACME.LearningCenterPlatform.API.Profiles.Domain.Repositories;
+using ACME.LearningCenterPlatform.API.Profiles.Domain.Services;
+using ACME.LearningCenterPlatform.API.Profiles.Infrastructure.Persistence.EFC.Repositories;
 using ACME.LearningCenterPlatform.API.Publishing.Application.Internal.CommandServices;
 using ACME.LearningCenterPlatform.API.Publishing.Application.Internal.QueryServices;
 using ACME.LearningCenterPlatform.API.Publishing.Domain.Repositories;
@@ -47,7 +52,7 @@ builder.Services.AddSwaggerGen(options => options.EnableAnnotations());
 // Dependency Injection
 
 // Shared Bounded Context
-builder.Services.AddScoped<IUnitOfWOrk, UnitOfWork>();
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 // Publishing Bounded Context
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
@@ -57,6 +62,10 @@ builder.Services.AddScoped<ICategoryQueryService, CategoryQueryService>();
 builder.Services.AddScoped<ITutorialCommandService, TutorialCommandService>();
 builder.Services.AddScoped<ITutorialQueryService, TutorialQueryService>();
 
+// Profiles Bounded Context Dependency Injection Configuration
+builder.Services.AddScoped<IProfileRepository, ProfileRepository>();
+builder.Services.AddScoped<IProfileCommandService, ProfileCommandService>();
+builder.Services.AddScoped<IProfileQueryService, ProfileQueryService>();
 
 var app = builder.Build();
 

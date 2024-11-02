@@ -21,7 +21,7 @@ namespace ACME.LearningCenterPlatform.API.Publishing.Application.Internal.Comman
 public class TutorialCommandService(
     ICategoryRepository categoryRepository,
     ITutorialRepository tutorialRepository, 
-    IUnitOfWOrk unitOfWork) : ITutorialCommandService
+    IUnitOfWork unitOfWork) : ITutorialCommandService
 {
     /// <inheritdoc />
     public async Task<Tutorial?> Handle(AddVideoAssetToTutorialCommand command)
