@@ -28,14 +28,8 @@ public class Category
     {
         Name = name;
     }
-    
-    /// <summary>
-    /// Constructor for the category entity 
-    /// </summary>
-    /// <param name="command">
-    /// The command to create a category
-    /// </param>
-    public Category(CreateCategoryCommand command) : this()
+
+    public Category(CreateCategoryCommand command)
     {
         Name = command.Name;
     }
