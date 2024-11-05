@@ -68,4 +68,6 @@ public partial class Asset(EAssetType type) : IPublishable
     {
         return string.Empty;
     }
+    
+    
 }
