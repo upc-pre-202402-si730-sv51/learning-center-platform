@@ -1,3 +1,4 @@
+using ACME.LearningCenterPlatform.API.IAM.Domain.Model.Aggregates;
 using ACME.LearningCenterPlatform.API.Profiles.Domain.Model.Aggregates;
 using ACME.LearningCenterPlatform.API.Publishing.Domain.Model.Aggregate;
 using ACME.LearningCenterPlatform.API.Publishing.Domain.Model.Entities;
@@ -102,6 +103,14 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
             a.Property(s => s.Country).HasColumnName("AddressCountry");
          });
       
+      // IAM Context
+      builder.Entity<User>().HasKey(u => u.Id);
+      builder.Entity<User>().Property(u => u.Id).IsRequired().ValueGeneratedOnAdd();
+      builder.Entity<User>().Property(u => u.Username).IsRequired();
+      builder.Entity<User>().Property(u => u.PasswordHash).IsRequired();
+      
+      
+      // Apply snake case naming convention
       builder.UseSnakeCaseNamingConvention();
    }
 }
