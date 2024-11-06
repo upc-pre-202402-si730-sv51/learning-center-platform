@@ -1,3 +1,12 @@
+using ACME.LearningCenterPlatform.API.IAM.Application.Internal.CommandServices;
+using ACME.LearningCenterPlatform.API.IAM.Application.Internal.OutboundServices;
+using ACME.LearningCenterPlatform.API.IAM.Application.Internal.QueryServices;
+using ACME.LearningCenterPlatform.API.IAM.Domain.Repositories;
+using ACME.LearningCenterPlatform.API.IAM.Domain.Services;
+using ACME.LearningCenterPlatform.API.IAM.Infrastructure.Hashing.BCrypt.Services;
+using ACME.LearningCenterPlatform.API.IAM.Infrastructure.Persistence.EFC.Repositories;
+using ACME.LearningCenterPlatform.API.IAM.Infrastructure.Tokens.JWT.Configuration;
+using ACME.LearningCenterPlatform.API.IAM.Infrastructure.Tokens.JWT.Services;
 using ACME.LearningCenterPlatform.API.Profiles.Application.Internal.CommandServices;
 using ACME.LearningCenterPlatform.API.Profiles.Application.Internal.QueryServices;
 using ACME.LearningCenterPlatform.API.Profiles.Domain.Repositories;
@@ -66,6 +75,18 @@ builder.Services.AddScoped<ITutorialQueryService, TutorialQueryService>();
 builder.Services.AddScoped<IProfileRepository, ProfileRepository>();
 builder.Services.AddScoped<IProfileCommandService, ProfileCommandService>();
 builder.Services.AddScoped<IProfileQueryService, ProfileQueryService>();
+
+// IAM Bounded Context Dependency Injection Configuration
+
+// TokenSettings Configuration
+
+builder.Services.Configure<TokenSettings>(builder.Configuration.GetSection("TokenSettings"));
+
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IUserCommandService, UserCommandService>();
+builder.Services.AddScoped<IUserQueryService, UserQueryService>();
+builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<IHashingService, HashingService>();
 
 var app = builder.Build();
 
