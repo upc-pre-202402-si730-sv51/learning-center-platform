@@ -5,6 +5,7 @@ using ACME.LearningCenterPlatform.API.IAM.Domain.Repositories;
 using ACME.LearningCenterPlatform.API.IAM.Domain.Services;
 using ACME.LearningCenterPlatform.API.IAM.Infrastructure.Hashing.BCrypt.Services;
 using ACME.LearningCenterPlatform.API.IAM.Infrastructure.Persistence.EFC.Repositories;
+using ACME.LearningCenterPlatform.API.IAM.Infrastructure.Pipeline.Middleware.Extensions;
 using ACME.LearningCenterPlatform.API.IAM.Infrastructure.Tokens.JWT.Configuration;
 using ACME.LearningCenterPlatform.API.IAM.Infrastructure.Tokens.JWT.Services;
 using ACME.LearningCenterPlatform.API.Profiles.Application.Internal.CommandServices;
@@ -21,7 +22,9 @@ using ACME.LearningCenterPlatform.API.Shared.Domain.Repositories;
 using ACME.LearningCenterPlatform.API.Shared.Infrastructure.Interfaces.ASP.Configuration;
 using ACME.LearningCenterPlatform.API.Shared.Infrastructure.Persistence.EFC.Configuration;
 using ACME.LearningCenterPlatform.API.Shared.Infrastructure.Persistence.EFC.Repositories;
+using ACME.LearningCenterPlatform.API.Shared.Infrastructure.Pipeline.Middleware.Components;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -41,7 +44,6 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 {
     if (builder.Environment.IsDevelopment())
     {
-
         options.UseMySQL(connectionString)
             .LogTo(Console.WriteLine, LogLevel.Information)
             .EnableSensitiveDataLogging()
@@ -56,7 +58,58 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(options => options.EnableAnnotations());
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Title = "ACME.LearningCenterPlatform.API",
+        Version = "v1",
+        Description = "ACME Learning Center Platform API",
+        TermsOfService = new Uri("https://acme-learning.com/tos"),
+        Contact = new OpenApiContact
+        {
+            Name = "ACME Studios",
+            Email = "contact@acme.com"
+        },
+        License = new OpenApiLicense
+        {
+            Name = "Apache 2.0",
+            Url = new Uri("https://apache.org/licenses/LICENSE-2.0.html")
+        }
+    });
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        In = ParameterLocation.Header,
+        Description = "Please enter token into field",
+        Name = "Authorization",
+        Type = SecuritySchemeType.Http,
+        BearerFormat = "JWT",
+        Scheme = "bearer"
+    });
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Id = "Bearer",
+                    Type = ReferenceType.SecurityScheme
+                }
+            },
+            Array.Empty<string>()
+        }
+    });
+    options.EnableAnnotations();
+});
+
+// Add CORS policy
+builder.Services.AddCors(options =>
+    options.AddPolicy(
+        "AllowAllPolicy",
+        policy => policy.AllowAnyOrigin()
+            .AllowAnyMethod()
+            .AllowAnyHeader()));
 
 // Dependency Injection
 
@@ -88,6 +141,11 @@ builder.Services.AddScoped<IUserQueryService, UserQueryService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IHashingService, HashingService>();
 
+// Common Exception Handling Middleware
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.AddProblemDetails();
+
 var app = builder.Build();
 
 // Verify if the database exists and create it if it doesn't
@@ -100,14 +158,22 @@ using (var scope = app.Services.CreateScope())
 }
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
 
+// Enable Documentation Generation
+app.UseSwagger();
+app.UseSwaggerUI();
+
+// Enable CORS
+app.UseCors("AllowAllPolicy");
+
+// Enable Request Authorization Middleware
+app.UseRequestAuthorization();
+
+// Enable Exception Handling Middleware
+app.UseExceptionHandler();
+
+// Other Middleware
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
 
 app.MapControllers();

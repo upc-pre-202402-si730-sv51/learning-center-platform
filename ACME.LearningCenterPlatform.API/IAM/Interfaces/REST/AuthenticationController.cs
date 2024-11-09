@@ -1,5 +1,6 @@
 using System.Net.Mime;
 using ACME.LearningCenterPlatform.API.IAM.Domain.Services;
+using ACME.LearningCenterPlatform.API.IAM.Infrastructure.Pipeline.Middleware.Attributes;
 using ACME.LearningCenterPlatform.API.IAM.Interfaces.REST.Resources;
 using ACME.LearningCenterPlatform.API.IAM.Interfaces.REST.Transform;
 using Microsoft.AspNetCore.Mvc;
@@ -13,6 +14,7 @@ namespace ACME.LearningCenterPlatform.API.IAM.Interfaces.REST;
 /// <param name="userCommandService">
 /// The <see cref="IUserCommandService"/> service.
 /// </param>
+[Authorize]
 [ApiController]
 [Route("api/v1/[controller]")]
 [Produces(MediaTypeNames.Application.Json)]
@@ -28,6 +30,7 @@ public class AuthenticationController(IUserCommandService userCommandService) : 
     /// <returns>
     /// The <see cref="AuthenticatedUserResource"/> resource.
     /// </returns>
+    [AllowAnonymous]
     [HttpPost("sign-in")]
     [SwaggerOperation(
         Summary = "Signs in the user.",
@@ -53,6 +56,7 @@ public class AuthenticationController(IUserCommandService userCommandService) : 
     /// <returns>
     /// A message indicating that the user was signed up.
     /// </returns>
+    [AllowAnonymous]
     [HttpPost("sign-up")]
     [SwaggerOperation(
         Summary = "Signs up the user.",
