@@ -142,8 +142,8 @@ builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IHashingService, HashingService>();
 
 // Common Exception Handling Middleware
-builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
-builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.AddExceptionHandler<CommonExceptionHandler>();
+builder.Services.AddExceptionHandler<CommonExceptionHandler>();
 builder.Services.AddProblemDetails();
 
 var app = builder.Build();
